@@ -37,7 +37,7 @@ class MainDrawer extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
             onTap: () {
-              Navigator.of(context).pushNamed('/');
+              Navigator.of(context).pushReplacementNamed('/');
             },
           ),
           ListTile(
@@ -53,7 +53,8 @@ class MainDrawer extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
             onTap: () {
-              Navigator.of(context).pushNamed(FiltersScreen.routename);
+              Navigator.of(context)
+                  .pushReplacementNamed(FiltersScreen.routename);
             },
           ),
         ],
