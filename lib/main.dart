@@ -1,15 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:meal_app/dummy_data.dart';
 import 'package:meal_app/screens/categories_screen.dart';
 import 'package:meal_app/screens/category_meals_screen.dart';
 import 'package:meal_app/screens/filters_screen.dart';
 import 'package:meal_app/screens/meal_details_screen.dart';
 import 'package:meal_app/screens/tabs_screen.dart';
 
+import 'models/meal.dart';
+
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Map<String, bool> filters = {
+    'gluten': false,
+    'lactose': false,
+    'vegetarian': false,
+    'vegan': false,
+  };
+
+  List<Meal> availableMeals = DUMMY_MEALS;
+
+  void setFilters(Map<String, bool> filtersData) {
+    setState(() {
+      filters = filtersData;
+
+      availableMeals = DUMMY_MEALS.where((meal) {
+        if (filters['gluten'] == true && !meal.isGlutenFree) {
+          return false;
+        }
+        if (filters['lactose'] == true && !meal.isLactoseFree) {
+          return false;
+        }
+        if (filters['vegetarian'] == true && !meal.isVegetarian) {
+          return false;
+        }
+        if (filters['vegan'] == true && !meal.isVegan) {
+          return false;
+        }
+        return true;
+      }).toList();
+    });
+    print("Anas");
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -31,9 +71,11 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         '/': (context) => TabsScreen(),
-        CategoryMealsScreen.routename: (context) => CategoryMealsScreen(),
+        CategoryMealsScreen.routename: (context) =>
+            CategoryMealsScreen(availableMeals),
         MealDetailsScreen.routename: (context) => MealDetailsScreen(),
-        FiltersScreen.routename: (context) => FiltersScreen(),
+        FiltersScreen.routename: (context) =>
+            FiltersScreen(filters, setFilters),
       },
     );
   }
